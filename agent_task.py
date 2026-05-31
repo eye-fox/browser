@@ -1,6 +1,7 @@
 import asyncio
 import os
 import json
+import shutil
 from pathlib import Path
 from browser_use import Agent, Browser, ChatGoogle
 
@@ -33,9 +34,18 @@ async def main():
     output_dir = Path('output')
     output_dir.mkdir(exist_ok=True)
 
+    # Copy screenshots
+    for i, path in enumerate(history.screenshots()):
+        if path and Path(path).exists():
+            shutil.copy2(path, output_dir / f'screenshot_{i}.png')
+
+    # Get final result
+    final = history.final_result()
+
     result = {
         'task': task,
         'status': 'completed',
+        'final_result': final,
     }
 
     output_dir.joinpath('result.json').write_text(json.dumps(result, indent=2))
