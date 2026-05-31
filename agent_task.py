@@ -3,7 +3,7 @@ import os
 import json
 import shutil
 from pathlib import Path
-from browser_use import Agent, Browser, ChatGoogle
+from browser_use import Agent, Browser, BrowserProfile, ChatGoogle
 
 
 async def main():
@@ -11,10 +11,11 @@ async def main():
 
     llm = ChatGoogle(model='gemini-3-flash-preview')
 
-    browser = Browser(
+    profile = BrowserProfile(
         headless=True,
-        args=['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+        extra_chrome_args=['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
     )
+    browser = Browser(browser_profile=profile)
 
     sensitive_data = {}
     if os.environ.get('SHOPIFY_EMAIL'):
