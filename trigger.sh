@@ -2,7 +2,7 @@
 # Trigger browser task dari HP/termux
 # Usage: ./trigger.sh "task description disini"
 
-TOKEN="TOKEN_GITHUB"
+TOKEN="TOKEN_GITHUB_ANDA"
 REPO="eye-fox/browser"
 
 if [ -z "$1" ]; then
