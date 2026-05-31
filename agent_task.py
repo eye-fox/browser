@@ -13,7 +13,7 @@ async def main():
 
     profile = BrowserProfile(
         headless=True,
-        extra_chrome_args=['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--disable-software-rasterizer'],
+        args=['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
         chromium_sandbox=False,
     )
     browser = Browser(browser_profile=profile)
