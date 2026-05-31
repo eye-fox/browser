@@ -13,7 +13,7 @@ async def main():
 
     browser = Browser(
         headless=True,
-        args=['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage'],
+        chromium_sandbox=False,
     )
 
     sensitive_data = {}
