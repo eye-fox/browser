@@ -10,7 +10,10 @@ async def main():
 
     llm = ChatGoogle(model='gemini-3-flash-preview')
 
-    browser = Browser()
+    browser = Browser(
+        headless=True,
+        args=['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage'],
+    )
 
     sensitive_data = {}
     if os.environ.get('SHOPIFY_EMAIL'):

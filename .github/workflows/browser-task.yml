@@ -19,8 +19,11 @@ jobs:
 
       - uses: astral-sh/setup-uv@v6
 
-      - name: Install Chromium
-        run: uvx playwright install chromium --with-deps --no-shell
+      - name: Install Google Chrome
+        run: |
+          wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+          rm google-chrome-stable_current_amd64.deb
 
       - name: Run agent
         run: uv run --with browser-use --isolated agent_task.py
