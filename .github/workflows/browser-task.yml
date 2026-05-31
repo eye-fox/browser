@@ -1,0 +1,38 @@
+name: Browser Agent
+
+on:
+  repository_dispatch:
+    types: [run-task]
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'Task untuk browser agent'
+        required: true
+        default: 'Buka google.com'
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Install Chromium
+        run: uvx playwright install chromium --with-deps --no-shell
+
+      - name: Run agent
+        run: uv run --with browser-use --isolated agent_task.py
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          TASK: ${{ github.event.client_payload.task || github.event.inputs.task }}
+          SHOPIFY_EMAIL: ${{ secrets.SHOPIFY_EMAIL }}
+          SHOPIFY_PASS: ${{ secrets.SHOPIFY_PASS }}
+
+      - name: Upload hasil
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-output
+          path: output/
