@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Just a moment...</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #f6f6f6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #444;
+  }
+  .challenge-box {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+    width: 400px;
+    max-width: 90vw;
+    padding: 40px 36px 36px;
+    text-align: center;
+    position: relative;
+  }
+  .logo {
+    margin-bottom: 24px;
+  }
+  .logo svg {
+    width: 82px;
+    height: 34px;
+  }
+  .challenge-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 8px;
+  }
+  .challenge-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+  .challenge-subtitle a {
+    color: #0051c3;
+    text-decoration: none;
+  }
+  .challenge-subtitle a:hover {
+    text-decoration: underline;
+  }
+  #phase-initial, #phase-verify {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  #phase-checkbox {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  #phase-verify { display: none; }
+
+  .spinner {
+    width: 44px;
+    height: 44px;
+    border: 4px solid #e0e0e0;
+    border-top-color: #0051c3;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .check-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    user-select: none;
+    background: #fafafa;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    padding: 10px 20px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .check-label:hover {
+    background: #f0f0f0;
+    border-color: #bbb;
+  }
+  .check-label input {
+    width: 18px;
+    height: 18px;
+    accent-color: #0051c3;
+    cursor: pointer;
+  }
+  .check-text {
+    font-size: 14px;
+    color: #444;
+  }
+  .cf-footer {
+    margin-top: 28px;
+    font-size: 11px;
+    color: #999;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+  .cf-footer a {
+    color: #999;
+    text-decoration: none;
+  }
+  .cf-footer a:hover {
+    color: #666;
+  }
+  .ray-id {
+    margin-top: 12px;
+    font-size: 10px;
+    color: #bbb;
+    font-family: monospace;
+    letter-spacing: 0.3px;
+  }
+  .status-text {
+    font-size: 13px;
+    color: #888;
+  }
+  .check-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #d4edda;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .check-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  .fade-in {
+    animation: fadeIn 0.3s ease forwards;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="challenge-box">
+  <div class="logo">
+    <svg viewBox="0 0 82 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24.5 0L0 12.4V21.6L24.5 34L49 21.6V12.4L24.5 0Z" fill="#F38020"/>
+      <path d="M24.5 34V0L49 12.4V21.6L24.5 34Z" fill="#FCB040"/>
+      <path d="M36.5 8.2L24.5 2.6L12.5 8.2V19.4L24.5 25L36.5 19.4V8.2Z" fill="white"/>
+      <path d="M41.5 15.6H38.5L36.5 19.4L24.5 25L12.5 19.4L7.5 11.4H4.5L2.5 15.6H5.5L7.5 19.4L12.5 25L24.5 34L36.5 25L41.5 15.6Z" fill="#F38020" opacity="0.5"/>
+      <text x="54" y="24" font-family="'Helvetica Neue',Arial,sans-serif" font-size="22" font-weight="700" fill="#444">Cloudflare</text>
+    </svg>
+  </div>
+
+  <div class="challenge-title">Checking your browser</div>
+  <div class="challenge-subtitle" id="subtitle">
+    This process is automatic. Your browser will redirect shortly.
+    <br>Please wait up to 5 seconds...
+  </div>
+
+  <div id="phase-initial">
+    <div class="spinner"></div>
+    <div class="status-text">Verifying connection...</div>
+  </div>
+
+  <div id="phase-checkbox">
+    <div class="check-label">
+      <input type="checkbox" id="human-check">
+      <span class="check-text">I am human</span>
+    </div>
+    <div class="status-text" style="font-size:12px;color:#aaa;">Verify you are human</div>
+  </div>
+
+  <div id="phase-verify">
+    <div class="spinner"></div>
+    <div class="status-text">Verifying...</div>
+  </div>
+
+  <div class="ray-id">Ray ID: <span id="ray-id">pending</span></div>
+
+  <div class="cf-footer">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+  </div>
+</div>
+
+<script>
+(function() {
+  const rayId = 'ray-' + Math.random().toString(36).substring(2, 10).toUpperCase().replace(/./g, c => Math.random() > 0.5 ? c : String.fromCharCode(c.charCodeAt(0) + (Math.random() > 0.5 ? 0 : 0)));
+  document.getElementById('ray-id').textContent = rayId;
+
+  const initial = document.getElementById('phase-initial');
+  const checkbox = document.getElementById('phase-checkbox');
+  const verify = document.getElementById('phase-verify');
+  const subtitle = document.getElementById('subtitle');
+  const checkInput = document.getElementById('human-check');
+
+  let checked = false;
+
+  setTimeout(() => {
+    initial.style.display = 'none';
+    checkbox.style.display = 'flex';
+    checkbox.classList.add('fade-in');
+    subtitle.innerHTML = 'Please verify you are human.';
+  }, 2500 + Math.random() * 1500);
+
+  checkInput.addEventListener('change', function() {
+    if (this.checked && !checked) {
+      checked = true;
+      checkbox.style.display = 'none';
+      verify.style.display = 'flex';
+      verify.classList.add('fade-in');
+      subtitle.innerHTML = 'Verification complete. Redirecting...';
+
+      const dots = ['Verifying.', 'Verifying..', 'Verifying...'];
+      let i = 0;
+      const dotInterval = setInterval(() => {
+        document.querySelector('#phase-verify .status-text').textContent = dots[i % 3];
+        i++;
+      }, 400);
+
+      setTimeout(() => {
+        clearInterval(dotInterval);
+        document.querySelector('#phase-verify .status-text').textContent = 'Redirecting...';
+        document.querySelector('#phase-verify .spinner').outerHTML = '<div class="check-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="#155724"/></svg></div>';
+        subtitle.innerHTML = 'Challenge passed! You will be redirected.';
+        subtitle.style.color = '#155724';
+
+        setTimeout(() => {
+          window.location.href = 'https://example.com';
+        }, 1200);
+      }, 1800 + Math.random() * 1200);
+    }
+  });
+})();
+</script>
+</body>
+</html>
